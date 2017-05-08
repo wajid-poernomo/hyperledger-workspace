@@ -1,0 +1,11 @@
+{
+  "name": "taxtime-quick-biz-loans",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "wajid.poernomo@gmail.com",
+  "license": "ISC"
+}
