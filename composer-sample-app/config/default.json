@@ -1,0 +1,9 @@
+{
+
+  "composer-sample-app" : {
+     "participantId" : "WebAppAdmin",
+     "participantPwd" :"DJY27pEnl16d",
+     "businessNetworkIdentifier" : "taxtime-quick-biz-loans",
+     "connectionProfile" : "defaultProfile"
+  }
+}
