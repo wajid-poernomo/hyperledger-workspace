@@ -11,7 +11,7 @@ import {JsonController, Param, Body, Get, Post, Put, Delete} from "routing-contr
 import {BusinessNetworkConnection} from 'composer-client';
 import * as config from 'config';
 
-@JsonController()
+@JsonController('/users')
 @Service()
 export class UserController {
     private logger: winston.LoggerInstance = new LoggerFactory().create();
@@ -24,7 +24,10 @@ export class UserController {
 
     @Get('/')
     getAll() {
-       this.logger.debug("test");
+       this.logger.debug("Attempting to Send Chart Of Accounts to Hyperledger fabric.");
+
+       this.blockchainService.getParticipant('','');
+
        return "test1";
     }
 }

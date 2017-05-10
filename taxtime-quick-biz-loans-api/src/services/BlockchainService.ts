@@ -33,6 +33,24 @@ export class BlockchainService {
 
     }
 
+    public getParticipant(id: string, id2: string) {
+
+            this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
+            .then((result) => {
+                this.businessNetworkDefinition = result;
+                this.logger.debug('Connected to: ' + this.businessNetworkIdentifier);
+                
+                return result;
+            }).then((result) => {
+                return this.bizNetworkConnection.getParticipantRegistry('net.gunungmerapi.taxTimeQuickBizLoansNetwork.User')
+            }).then((registry) => {
+                return registry.get('wajid.poernomo@gmail.com')
+            })
+            .then((aResources) => {
+                this.logger.debug('got back participants' + aResources);
+            });
+    }
+
     /**
      * SaveChartOfAccounts
      */
@@ -51,7 +69,7 @@ export class BlockchainService {
                 this.chartOfAccountsRegistry = result;
                 this.logger.debug('Retrieved Asset Registry: ' + result);
 
-                            //TODO: return a promise here!!
+                //TODO: return a promise here!!
 
                 this.logger.debug('Attempting to create new Data');
 
