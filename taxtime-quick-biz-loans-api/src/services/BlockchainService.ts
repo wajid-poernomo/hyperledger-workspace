@@ -9,24 +9,68 @@ import * as config from 'config';
 @Service()
 export class BlockchainService {
     private logger: winston.LoggerInstance = new LoggerFactory().create();
-
+    private chartOfAccountsRegistry;
+    private config2;
+    private participantId;
+    private participantPwd;
+    
+    private CONNECTION_PROFILE_NAME;
+    private businessNetworkIdentifier;
+    private businessNetworkDefinition;
+    private bizNetworkConnection;
+    
     constructor() {
-        let config2 = config.get('taxtime-quick-biz-loans');
-        this.logger.debug(config2);
+        this.config2 = config.get('taxtime-quick-biz-loans');
+
         // these are the credentials to use to connect to the Hyperledger Fabric
-        let participantId = config2.get('participantId');
-        let participantPwd = config2.get('participantPwd');
+        this.participantId = this.config2.get('participantId');
+        this.participantPwd = this.config2.get('participantPwd');
     
-        let bizNetworkConnection = new BusinessNetworkConnection();
-        let CONNECTION_PROFILE_NAME = config2.get('connectionProfile');
-        let businessNetworkIdentifier = config2.get('businessNetworkIdentifier');
-        let businessNetworkDefinition;
-    
-        bizNetworkConnection.connect(CONNECTION_PROFILE_NAME, businessNetworkIdentifier, participantId, participantPwd)
+        this.bizNetworkConnection = new BusinessNetworkConnection();
+        this.CONNECTION_PROFILE_NAME = this.config2.get('connectionProfile');
+        this.businessNetworkIdentifier = this.config2.get('businessNetworkIdentifier');
+        this.businessNetworkDefinition;
+
+    }
+
+    /**
+     * SaveChartOfAccounts
+     */
+    public SaveChartOfAccounts() {
+            this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
             .then((result) => {
-                businessNetworkDefinition = result;
-                    this.logger.debug(result);
-                    this.logger.debug('here!');
-        });
+                this.businessNetworkDefinition = result;
+                this.logger.debug('Connected to: ' + this.businessNetworkIdentifier);
+                
+                return result;
+            }).then((result) =>{
+                 return this.bizNetworkConnection.getAssetRegistry('net.gunungmerapi.taxTimeQuickBizLoansNetwork.ChartOfAccounts')
+                        
+            }).then((result) =>{
+                
+                this.chartOfAccountsRegistry = result;
+                this.logger.debug('Retrieved Asset Registry: ' + result);
+
+                            //TODO: return a promise here!!
+
+                this.logger.debug('Attempting to create new Data');
+
+                let factory = this.businessNetworkDefinition.getFactory();
+                let chartOfAccounts = factory.newResource('net.gunungmerapi.taxTimeQuickBizLoansNetwork', 'ChartOfAccounts', '1');
+                chartOfAccounts.chartOfAccountsId = '1';
+                chartOfAccounts.owner //get owner from calling user.
+                chartOfAccounts.endorsements = [];
+                chartOfAccounts.loanOffers = [];
+
+                // These will be values for accounts
+                chartOfAccounts.assetAccounts = '2000';
+                chartOfAccounts.liabilityAccounts = '3000';
+                chartOfAccounts.equityAccounts = '2000';
+                chartOfAccounts.revenueAccounts = '2000';
+                chartOfAccounts.expenseAccounts = '2000';   
+
+            }).catch((error) =>{
+                this.logger.debug(error);
+            });
     }
 }
