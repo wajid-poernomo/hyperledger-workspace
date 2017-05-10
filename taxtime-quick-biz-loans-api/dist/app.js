@@ -12,8 +12,6 @@ require("reflect-metadata");
 const routing_controllers_1 = require("routing-controllers");
 const typedi_1 = require("typedi");
 const morgan = require("morgan");
-const express = require("express");
-const cors = require("cors");
 const LoggerFactory_1 = require("./utils/LoggerFactory");
 class App {
     constructor() {
@@ -21,15 +19,15 @@ class App {
     }
     run() {
         return __awaiter(this, void 0, void 0, function* () {
-            const app = express();
-            app.use(cors());
+            //const app = express();
+            //app.use(cors());
+            //const LOG = winston.loggers.get('application');
             // Dependency injection
             routing_controllers_1.useContainer(typedi_1.Container);
             typedi_1.Container.set(LoggerFactory_1.LoggerFactory, new LoggerFactory_1.LoggerFactory());
             // initialize routing
-            routing_controllers_1.useExpressServer(app, {
-                routePrefix: '/api/v1',
-                controllers: [__dirname + '/api/v1/*.js']
+            const app = routing_controllers_1.createExpressServer({
+                controllers: [__dirname + '/controllers/*.js']
             });
             // Log requests
             app.use(morgan('dev', {

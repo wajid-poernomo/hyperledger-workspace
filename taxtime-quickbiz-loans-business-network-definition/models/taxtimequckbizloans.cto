@@ -25,20 +25,20 @@ asset Offer identified by offerId {
     o String information
 }
 
-asset User identified by emailAddress {
+participant User identified by emailAddress {
     o String emailAddress
     o String firstName
     o String lastName
 }
 
-asset TaxAccountant identified by taxAccountantId {
+participant TaxAccountant identified by taxAccountantId {
     o String taxAccountantId    
     --> ChartOfAccounts chartOfAccounts
     o String firstName
     o String lastName
 }
 
-asset Bank identified by bankId {
+participant Bank identified by bankId {
     o String bankId
     o String name
 }

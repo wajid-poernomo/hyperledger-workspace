@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import {useExpressServer, useContainer} from 'routing-controllers';
+import {createExpressServer, useContainer} from 'routing-controllers';
 import {Container} from 'typedi';
 import {Request, Response} from 'express';
 import * as morgan from 'morgan';
@@ -9,22 +9,25 @@ import * as cors from 'cors';
 
 import {LoggerFactory} from './utils/LoggerFactory';
 import {Config} from './config';
+import {UserController} from './controllers/UserController';
+
 
 class App {
   private logger: winston.LoggerInstance = new LoggerFactory().create();
 
   public async run(): Promise<void> {
-    const app = express();
-    app.use(cors());
+    //const app = express();
+    //app.use(cors());
+
+    //const LOG = winston.loggers.get('application');
 
     // Dependency injection
     useContainer(Container);
     Container.set(LoggerFactory, new LoggerFactory());
 
     // initialize routing
-    useExpressServer(app, {
-      routePrefix: '/api/v1',
-      controllers: [__dirname + '/api/v1/*.js']
+    const app = createExpressServer({
+        controllers: [__dirname + '/controllers/*.js']
     });
 
     // Log requests
