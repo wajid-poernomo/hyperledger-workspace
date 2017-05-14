@@ -2,7 +2,7 @@
   "name": "composer-sample-app",
   "version": "0.0.1",
   "description": "Test Composer project",
-  "author": "wp wajid.poernomo",
+  "author": "wajid.poernomo@gmail.com wajid.poernomo@gmail.com",
   "main": "index.js",
   "scripts": {
     "preinstall": "composer --version || { echo 'Please first run npm install -g composer-cli'; exit 1;} ",
@@ -20,7 +20,7 @@
     "getting-started",
     "Fabric Composer"
   ],
-  "author": "wp",
+  "author": "wajid.poernomo@gmail.com",
   "license": "Apache2",
   "dependencies": {
     "taxtime-quick-biz-loans": "latest",
