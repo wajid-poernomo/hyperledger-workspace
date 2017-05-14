@@ -1,3 +1,5 @@
+'use strict';
+import 'reflect-metadata';
 import {Response} from 'express';
 import * as winston from 'winston';
 import {Service} from 'typedi';
@@ -9,34 +11,27 @@ import {JsonController, Param, Body, Get, Post, Put, Delete} from "routing-contr
 import {BusinessNetworkConnection} from 'composer-client';
 import * as config from 'config';
 
-// net.gunungmerapi.taxTimeQuickBizLoansNetwork.ChartOfAccounts
-
-@JsonController('/customerData')
+@JsonController('/accountants')
 @Service()
-export class CustomerDataController {
+export class TaxAccountantController {
     private logger: winston.LoggerInstance = new LoggerFactory().create();
     private blockchainService: BlockchainService;
 
     constructor(blockchainService: BlockchainService) {
         this.blockchainService = blockchainService;
-        this.logger.debug('The following service was injected:\n' + this.blockchainService);
+
     }
 
-    @Post('/accounts')
-    postCustomerData() {
-       this.logger.debug("Attempting to Send Chart Of Accounts to Hyperledger fabric.");
-
-        this.blockchainService.SaveChartOfAccounts();
-
-       return "Attempted";
+    @Get('/')
+    getAll() {
+       this.blockchainService.getAllAccountants();
+       return "attempted";
     }
 
-    @Get('/accounts')
-    getbanks() {
-       this.logger.debug("Attempting to get Accounts Hyperledger fabric.");
 
-        this.blockchainService.GetAccounts();
-
-       return "Attempted";
+    @Post('/')
+    addUser() {
+       this.blockchainService.addAccountant();
+       return "attempted";
     }
 }

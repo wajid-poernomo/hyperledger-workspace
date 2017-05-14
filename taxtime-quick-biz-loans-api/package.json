@@ -1,11 +1,11 @@
 {
   "name": "taxtime-quick-biz-loans-api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "API to call business network definition for taxtime-quick-biz-loans",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node dist/index.js"
+    "start": "node dist/app.js"
   },
   "author": "Wajid Poernomo",
   "license": "ISC",
@@ -20,7 +20,7 @@
     "@types/shortid": "0.0.28",
     "@types/winston": "0.0.32",
     "body-parser": "~1.13.2",
-    "composer-client": "^0.7.1",
+    "composer-client": "^0.7.2",
     "config": "^1.26.1",
     "cookie-parser": "~1.3.5",
     "cors": "^2.8.1",

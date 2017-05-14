@@ -19,15 +19,19 @@ export class UserController {
 
     constructor(blockchainService: BlockchainService) {
         this.blockchainService = blockchainService;
-        this.logger.debug('The following service was injected:\n' + this.blockchainService);
+
     }
 
     @Get('/')
     getAll() {
-       this.logger.debug("Attempting to Send Chart Of Accounts to Hyperledger fabric.");
+       this.blockchainService.getAllParticipants();
+       return "attempted";
+    }
 
-       this.blockchainService.getParticipant('','');
 
-       return "test1";
+    @Post('/')
+    addUser() {
+       this.blockchainService.addUser();
+       return "attempted";
     }
 }
