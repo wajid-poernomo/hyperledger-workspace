@@ -5,7 +5,7 @@ import * as winston from 'winston';
 import {Service} from 'typedi';
 import {LoggerFactory} from '../utils/LoggerFactory';
 import {BlockchainService} from '../services/BlockchainService';
-
+import {Bank} from '../models/Bank';
 import {JsonController, Param, Body, Get, Post, Put, Delete} from "routing-controllers";
 
 import {BusinessNetworkConnection} from 'composer-client';
@@ -24,14 +24,12 @@ export class BankController {
 
     @Get('/')
     getAll() {
-       this.blockchainService.getAllBanks();
-       return "attempted";
+       return this.blockchainService.getAllBanks();
     }
 
 
     @Post('/')
-    addBank() {
-       this.blockchainService.addBank();
-       return "attempted";
+    addBank(@Body() bank: Bank) {
+       return this.blockchainService.addBank(bank);
     }
 }

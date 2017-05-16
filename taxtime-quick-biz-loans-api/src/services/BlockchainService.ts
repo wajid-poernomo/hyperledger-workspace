@@ -5,7 +5,10 @@ import { Service } from 'typedi';
 import { LoggerFactory } from '../utils/LoggerFactory';
 import { BusinessNetworkConnection } from 'composer-client';
 import * as config from 'config';
-import {User} from '../models/User';
+import { User } from '../models/User';
+import { Bank } from '../models/Bank';
+import { Accountant } from '../models/Accountant';
+import { ChartOfAccounts } from '../models/ChartOfAccounts';
 
 @Service()
 export class BlockchainService {
@@ -54,7 +57,7 @@ export class BlockchainService {
                     foo.push(new User(result[i].firstName, result[i].lastName, result[i].emailAddress));
                 }
                 return foo;
-                
+
             }).catch((error) => {
                 this.logger.debug(error);
             });
@@ -78,7 +81,7 @@ export class BlockchainService {
                 let user = factory.newResource('net.gunungmerapi.taxTimeQuickBizLoansNetwork', 'User', newUser.emailAddress);
                 user.firstName = newUser.firstName;
                 user.lastName = newUser.lastName;
-                
+
                 registry.add(user);
 
                 return user;
@@ -94,9 +97,9 @@ export class BlockchainService {
             });
     }
 
-    public async getAllBanks(): Promise<any> {
+    public async getAllBanks(): Promise<Bank> {
 
-        this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
+        return this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
             .then((result) => {
                 this.businessNetworkDefinition = result;
                 this.logger.debug('Connected to: ' + this.businessNetworkIdentifier);
@@ -106,20 +109,22 @@ export class BlockchainService {
             }).then((registry) => {
                 return registry.getAll();
             }).then((result) => {
+                let banks = [];
                 let arrayLength = result.length;
                 for (let i = 0; i < arrayLength; i++) {
                     this.logger.debug(result[i].name);
+                    banks.push(new Bank(result[i].bankId, result[i].name));
                 }
-                return result;
+                return banks;
             }).catch((error) => {
                 this.logger.debug(error);
             });
     }
 
 
-    public async addBank(): Promise<any> {
+    public async addBank(newBank: Bank): Promise<Bank> {
 
-        this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
+        return this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
             .then((result) => {
                 this.businessNetworkDefinition = result;
                 this.logger.debug('Connected to: ' + this.businessNetworkIdentifier);
@@ -132,27 +137,21 @@ export class BlockchainService {
 
                 let factory = this.businessNetworkDefinition.getFactory();
 
-                let user = factory.newResource('net.gunungmerapi.taxTimeQuickBizLoansNetwork', 'Bank', '1');
+                let bank = factory.newResource('net.gunungmerapi.taxTimeQuickBizLoansNetwork', 'Bank', newBank.bankId);
+                bank.bankId = newBank.bankId;
+                bank.name = newBank.name;
 
-                user.name = 'Bank Of America';
-   
-                registry.add(user);
+                registry.add(bank);
 
-                return user;
-            }).then((result) => {
-                let arrayLength = result.length;
-                for (let i = 0; i < arrayLength; i++) {
-                    this.logger.debug(result[i].name);
-                }
-                return result;
+                return newBank;
             }).catch((error) => {
                 this.logger.debug(error);
             });
     }
 
-   public async getAllAccountants(): Promise<any> {
+    public async getAllAccountants(): Promise<Accountant> {
 
-        this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
+        return this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
             .then((result) => {
                 this.businessNetworkDefinition = result;
                 this.logger.debug('Connected to: ' + this.businessNetworkIdentifier);
@@ -162,20 +161,22 @@ export class BlockchainService {
             }).then((registry) => {
                 return registry.getAll();
             }).then((result) => {
+                let accountants = [];
                 let arrayLength = result.length;
                 for (let i = 0; i < arrayLength; i++) {
                     this.logger.debug(result[i].firstName);
+                    accountants.push(new Accountant(result[i].taxAccountantId, result[i].firstName, result[i].lastName));
                 }
-                return result;
+                return accountants;
             }).catch((error) => {
                 this.logger.debug(error);
             });
     }
 
 
-    public async addAccountant(): Promise<any> {
+    public async addAccountant(accountant: Accountant): Promise<Accountant> {
 
-        this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
+        return this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
             .then((result) => {
                 this.businessNetworkDefinition = result;
                 this.logger.debug('Connected to: ' + this.businessNetworkIdentifier);
@@ -188,20 +189,14 @@ export class BlockchainService {
 
                 let factory = this.businessNetworkDefinition.getFactory();
 
-                let user = factory.newResource('net.gunungmerapi.taxTimeQuickBizLoansNetwork', 'TaxAccountant', '1');
+                let acc = factory.newResource('net.gunungmerapi.taxTimeQuickBizLoansNetwork', 'TaxAccountant', accountant.taxAccountantId);
 
-                user.firstName = 'Jeff';
-                user.lastName = 'Tierk';
+                acc.firstName = accountant.firstName;
+                acc.lastName = accountant.lastName;
 
-                registry.add(user);
+                registry.add(acc);
 
-                return user;
-            }).then((result) => {
-                let arrayLength = result.length;
-                for (let i = 0; i < arrayLength; i++) {
-                    this.logger.debug(result[i].firstName);
-                }
-                return result;
+                return accountant;
             }).catch((error) => {
                 this.logger.debug(error);
             });
@@ -210,9 +205,9 @@ export class BlockchainService {
     /**
      * SaveChartOfAccounts
      */
-    public async SaveChartOfAccounts(): Promise<any> {
+    public async SaveChartOfAccounts(accounts: ChartOfAccounts): Promise<ChartOfAccounts> {
 
-        this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
+        return this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
             .then((result) => {
                 this.businessNetworkDefinition = result;
                 this.logger.debug('Connected to: ' + this.businessNetworkIdentifier);
@@ -225,36 +220,30 @@ export class BlockchainService {
 
                 let factory = this.businessNetworkDefinition.getFactory();
 
-                let chartOfAccounts = factory.newResource('net.gunungmerapi.taxTimeQuickBizLoansNetwork', 'ChartOfAccounts', '1');
+                let chartOfAccounts = factory.newResource('net.gunungmerapi.taxTimeQuickBizLoansNetwork', 'ChartOfAccounts', accounts.chartOfAccountsId);
 
-                chartOfAccounts.assetAccounts = '2000';
-                chartOfAccounts.liabilityAccounts = '2000';
-                chartOfAccounts.equityAccounts = '2000';
-                chartOfAccounts.revenueAccounts = '2000';
-                chartOfAccounts.expenseAccounts = '2000';
+                chartOfAccounts.assetAccounts = accounts.assetAccounts;
+                chartOfAccounts.liabilityAccounts = accounts.liabilityAccounts;
+                chartOfAccounts.equityAccounts = accounts.equityAccounts;
+                chartOfAccounts.revenueAccounts = accounts.revenueAccounts;
+                chartOfAccounts.expenseAccounts = accounts.expenseAccounts;
 
-                let owner = factory.newResource('net.gunungmerapi.taxTimeQuickBizLoansNetwork', 'User', 'clay.gibs@gmail.com');
+                let owner = factory.newResource('net.gunungmerapi.taxTimeQuickBizLoansNetwork', 'User', accounts.owner.emailAddress);
 
-                owner.firstName = 'clay';
-                owner.lastName = 'gibs';
+                owner.firstName = accounts.owner.firstName;
+                owner.lastName = accounts.owner.lastName;
                 chartOfAccounts.owner = owner;
 
                 registry.add(chartOfAccounts);
 
-                return chartOfAccounts;
-            }).then((result) => {
-                let arrayLength = result.length;
-                for (let i = 0; i < arrayLength; i++) {
-                    this.logger.debug('here !' + result[i].assetAccounts);
-                }
-                return result;
+                return accounts;
             }).catch((error) => {
                 this.logger.debug(error);
             });
     }
 
-    public async GetAccounts(): Promise<any> {
-        this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
+    public async GetAccounts(): Promise<ChartOfAccounts> {
+        return this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
             .then((result) => {
                 this.businessNetworkDefinition = result;
                 this.logger.debug('Connected to: ' + this.businessNetworkIdentifier);
@@ -264,12 +253,21 @@ export class BlockchainService {
             }).then((registry) => {
                 return registry.getAll();
             }).then((result) => {
+                let accounts = [];
                 let arrayLength = result.length;
                 for (let i = 0; i < arrayLength; i++) {
                     this.logger.debug(result[i].assetAccounts);
                     this.logger.debug(result[i].owner.emailAddress);
+                    accounts.push(
+                        new ChartOfAccounts(result[i].chartOfAccountsId,
+                            result[i].assetAccounts,
+                            result[i].liabilityAccounts,
+                            result[i].equityAccounts,
+                            result[i].revenueAccounts,
+                            result[i].expenseAccounts,
+                            new User(result[i].owner.firstName, result[i].owner.lastName, result[i].owner.emailAddress)));
                 }
-                return result;
+                return accounts;
             }).catch((error) => {
                 this.logger.debug(error);
             });

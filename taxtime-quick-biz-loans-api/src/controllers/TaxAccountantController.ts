@@ -5,7 +5,7 @@ import * as winston from 'winston';
 import {Service} from 'typedi';
 import {LoggerFactory} from '../utils/LoggerFactory';
 import {BlockchainService} from '../services/BlockchainService';
-
+import {Accountant} from '../models/Accountant';
 import {JsonController, Param, Body, Get, Post, Put, Delete} from "routing-controllers";
 
 import {BusinessNetworkConnection} from 'composer-client';
@@ -24,14 +24,12 @@ export class TaxAccountantController {
 
     @Get('/')
     getAll() {
-       this.blockchainService.getAllAccountants();
-       return "attempted";
+       return this.blockchainService.getAllAccountants();
     }
 
 
     @Post('/')
-    addUser() {
-       this.blockchainService.addAccountant();
-       return "attempted";
+    addAccountant(@Body() accountant: Accountant) {
+       return this.blockchainService.addAccountant(accountant);
     }
 }

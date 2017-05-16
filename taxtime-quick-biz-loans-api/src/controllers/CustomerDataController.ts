@@ -3,7 +3,7 @@ import * as winston from 'winston';
 import {Service} from 'typedi';
 import {LoggerFactory} from '../utils/LoggerFactory';
 import {BlockchainService} from '../services/BlockchainService';
-
+import {ChartOfAccounts} from '../models/ChartOfAccounts';
 import {JsonController, Param, Body, Get, Post, Put, Delete} from "routing-controllers";
 
 import {BusinessNetworkConnection} from 'composer-client';
@@ -23,20 +23,16 @@ export class CustomerDataController {
     }
 
     @Post('/accounts')
-    postCustomerData() {
-       this.logger.debug("Attempting to Send Chart Of Accounts to Hyperledger fabric.");
+    postCustomerData(@Body() chartOfAccounts: ChartOfAccounts) {
+        this.logger.debug("Attempting to Send Chart Of Accounts to Hyperledger fabric.");
 
-        this.blockchainService.SaveChartOfAccounts();
-
-       return "Attempted";
+        return this.blockchainService.SaveChartOfAccounts(chartOfAccounts);
     }
 
     @Get('/accounts')
-    getbanks() {
+    getChartOfAccounts() {
        this.logger.debug("Attempting to get Accounts Hyperledger fabric.");
 
-        this.blockchainService.GetAccounts();
-
-       return "Attempted";
+       return this.blockchainService.GetAccounts();
     }
 }
