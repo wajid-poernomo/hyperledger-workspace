@@ -5,6 +5,7 @@ import { Service } from 'typedi';
 import { LoggerFactory } from '../utils/LoggerFactory';
 import { BusinessNetworkConnection } from 'composer-client';
 import * as config from 'config';
+import {User} from '../models/User';
 
 @Service()
 export class BlockchainService {
@@ -35,7 +36,7 @@ export class BlockchainService {
 
     public async getAllParticipants(): Promise<any> {
 
-        this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
+        return this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
             .then((result) => {
                 this.businessNetworkDefinition = result;
                 this.logger.debug('Connected to: ' + this.businessNetworkIdentifier);
@@ -45,20 +46,24 @@ export class BlockchainService {
             }).then((registry) => {
                 return registry.getAll();
             }).then((result) => {
+                let foo = [];
                 let arrayLength = result.length;
                 for (let i = 0; i < arrayLength; i++) {
                     this.logger.debug(result[i].emailAddress);
+
+                    foo.push(new User(result[i].firstName, result[i].lastName, result[i].emailAddress));
                 }
-                return result;
+                return foo;
+                
             }).catch((error) => {
                 this.logger.debug(error);
             });
     }
 
 
-    public async addUser(): Promise<any> {
+    public async addUser(newUser: User): Promise<User> {
 
-        this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
+        return this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
             .then((result) => {
                 this.businessNetworkDefinition = result;
                 this.logger.debug('Connected to: ' + this.businessNetworkIdentifier);
@@ -70,20 +75,20 @@ export class BlockchainService {
                 this.logger.debug('Retrieved Participant Registry: ' + registry);
 
                 let factory = this.businessNetworkDefinition.getFactory();
-
-                let user = factory.newResource('net.gunungmerapi.taxTimeQuickBizLoansNetwork', 'User', 'clay.gibs@gmail.com');
-
-                user.firstName = 'clay';
-                user.lastName = 'gibs';
+                let user = factory.newResource('net.gunungmerapi.taxTimeQuickBizLoansNetwork', 'User', newUser.emailAddress);
+                user.firstName = newUser.firstName;
+                user.lastName = newUser.lastName;
+                
                 registry.add(user);
 
                 return user;
+
             }).then((result) => {
                 let arrayLength = result.length;
                 for (let i = 0; i < arrayLength; i++) {
                     this.logger.debug(result[i].emailAddress);
                 }
-                return result;
+                return newUser;
             }).catch((error) => {
                 this.logger.debug(error);
             });

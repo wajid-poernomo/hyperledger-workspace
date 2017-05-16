@@ -16,11 +16,6 @@ class App {
   private logger: winston.LoggerInstance = new LoggerFactory().create();
 
   public async run(): Promise<void> {
-    //const app = express();
-    //app.use(cors());
-
-    //const LOG = winston.loggers.get('application');
-
     // Dependency injection
     useContainer(Container);
     Container.set(LoggerFactory, new LoggerFactory());
@@ -43,7 +38,9 @@ class App {
     // Start server
     const port = (process.env.VCAP_PORT || process.env.PORT || 8080);
     const host = (process.env.VCAP_HOST || process.env.HOST || 'localhost');
+    
     app.listen(port);
+    
     this.logger.info(`[App] Express server listening at http://${host}:${port}`);
   }
 }
