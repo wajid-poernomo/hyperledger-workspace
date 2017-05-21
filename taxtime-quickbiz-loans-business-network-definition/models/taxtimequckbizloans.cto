@@ -16,6 +16,11 @@ asset ChartOfAccounts identified by chartOfAccountsId {
     o String expenseAccounts
 }
 
+asset SimpleAsset identified by  {
+    o String id
+    o String name
+}
+
 participant User identified by emailAddress {
     o String emailAddress
     o String firstName
@@ -40,3 +45,4 @@ participant Bank identified by bankId {
     o String bankId
     o String name
 }
+
