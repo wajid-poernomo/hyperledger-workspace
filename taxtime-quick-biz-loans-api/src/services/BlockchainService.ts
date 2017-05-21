@@ -9,6 +9,7 @@ import { User } from '../models/User';
 import { Bank } from '../models/Bank';
 import { Accountant } from '../models/Accountant';
 import { ChartOfAccounts } from '../models/ChartOfAccounts';
+import { SimpleAsset } from '../models/SimpleAsset';
 
 @Service()
 export class BlockchainService {
@@ -35,6 +36,90 @@ export class BlockchainService {
         this.businessNetworkIdentifier = this.config2.get('businessNetworkIdentifier');
         this.businessNetworkDefinition;
 
+    }
+
+
+ public async getSimpleAssets(): Promise<any> {
+
+        return this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
+            .then((result) => {
+                this.businessNetworkDefinition = result;
+                this.logger.debug('Connected to: ' + this.businessNetworkIdentifier);
+                return result;
+            }).then((result) => {
+                return this.bizNetworkConnection.getAssetRegistry('net.gunungmerapi.taxTimeQuickBizLoansNetwork.SimpleAsset');
+            }).then((registry) => {
+                return registry.getAll();
+            }).then((result) => {
+                let foo = [];
+                let arrayLength = result.length;
+                for (let i = 0; i < arrayLength; i++) {
+                    this.logger.debug(result[i].emailAddress);
+
+                    foo.push(new SimpleAsset(result[i].simpleAsetId, result[i].name));
+                }
+                return foo;
+
+            }).catch((error) => {
+                this.logger.debug(error);
+            });
+    }
+
+
+    public async addSimpleAsset(simpleAsset: SimpleAsset): Promise<SimpleAsset> {
+
+        return this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
+            .then((result) => {
+                this.businessNetworkDefinition = result;
+                this.logger.debug('Connected to: ' + this.businessNetworkIdentifier);
+                return result;
+            }).then((result) => {
+                return this.bizNetworkConnection.getAssetRegistry('net.gunungmerapi.taxTimeQuickBizLoansNetwork.SimpleAsset');
+            }).then((registry) => {
+
+                this.logger.debug('Retrieved Participant Registry: ' + registry);
+
+                let factory = this.businessNetworkDefinition.getFactory();
+                let asset = factory.newResource('net.gunungmerapi.taxTimeQuickBizLoansNetwork', 'SimpleAsset', simpleAsset.id);
+                asset.firstName = simpleAsset.name;
+
+                registry.add(asset);
+
+                return asset;
+
+            }).then((result) => {
+       
+                    this.logger.debug(result);
+                    return result;
+         }).catch((error) => {
+                this.logger.debug(error);
+            });
+    }
+
+        public async findSimpleAsset(id: string): Promise<SimpleAsset> {
+
+        return this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
+            .then((result) => {
+                this.businessNetworkDefinition = result;
+                this.logger.debug('Connected to: ' + this.businessNetworkIdentifier);
+                return result;
+            }).then((result) => {
+                return this.bizNetworkConnection.getAssetRegistry('net.gunungmerapi.taxTimeQuickBizLoansNetwork.SimpleAsset');
+            }).then((registry) => {
+
+                this.logger.debug('Retrieved Asset Registry: ' + registry);
+
+                let asset = registry.get(id);
+
+                return asset;
+
+            }).then((result) => {
+       
+                    this.logger.debug(result);
+                    return result;
+         }).catch((error) => {
+                this.logger.debug(error);
+            });
     }
 
     public async getAllParticipants(): Promise<any> {

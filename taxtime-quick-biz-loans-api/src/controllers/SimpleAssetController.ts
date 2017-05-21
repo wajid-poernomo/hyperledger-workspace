@@ -5,15 +5,15 @@ import * as winston from 'winston';
 import {Service} from 'typedi';
 import {LoggerFactory} from '../utils/LoggerFactory';
 import {BlockchainService} from '../services/BlockchainService';
-import {User} from '../models/User';
+import {SimpleAsset} from '../models/SimpleAsset';
 import {JsonController, Param, Body, Get, Post, Put, Delete, HeaderParam} from "routing-controllers";
 
 import {BusinessNetworkConnection} from 'composer-client';
 import * as config from 'config';
 
-@JsonController('/users')
+@JsonController('/simpleAssets')
 @Service()
-export class UserController {
+export class SimpleAssetController {
     private logger: winston.LoggerInstance = new LoggerFactory().create();
     private blockchainService: BlockchainService;
 
@@ -23,13 +23,17 @@ export class UserController {
     }
 
     @Get('/')
-     getAll() : Promise<User> {
-       return this.blockchainService.getAllParticipants();
+    getAll() {
+       return this.blockchainService.getSimpleAssets();
     }
 
+    @Get('/:id')
+     getOne(@Param("id") id : string) : Promise<SimpleAsset> {
+       return this.blockchainService.findSimpleAsset(id);
+    }
 
     @Post('/')
-    addUser(@Body() user: User) {
-       return this.blockchainService.addUser(user);
+    addBank(@Body() simpleAsset: SimpleAsset) {
+       return this.blockchainService.addSimpleAsset(simpleAsset);
     }
 }
