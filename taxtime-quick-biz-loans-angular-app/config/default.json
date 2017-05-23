@@ -1,9 +1,0 @@
-{
-
-  "taxtime-quick-biz-loans-angular-app" : {
-    "connectionProfileName":"defaultProfile",
-    "networkIdentifier":"taxtime-quick-biz-loans",
-    "enrollmentId":"WebAppAdmin",
-    "enrollmentSecret":"DJY27pEnl16d"
-  }
-}

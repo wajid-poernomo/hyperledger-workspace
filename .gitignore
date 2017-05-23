@@ -1,6 +1,7 @@
 taxtime-quick-biz-loans-api/dist/
 taxtime-quick-biz-loans-api/logs.log
 taxtime-quick-biz-loans-api/node_modules/
-taxtime-quickbiz-loans-business-network-definition/logs/
 npm-debug.log
 
+biz-net-2.0/logs
+composer-sample-app/logs
