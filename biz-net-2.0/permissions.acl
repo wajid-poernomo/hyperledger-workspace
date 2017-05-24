@@ -1,4 +1,4 @@
-rule ChartOfAccountsUserAllowRule {
+rule ChartOfAccountsOwnerAllowRule {
     description: "User can access chart of accounts only if they are the owner of those accounts."
     participant: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.User"
     operation: ALL
@@ -7,11 +7,27 @@ rule ChartOfAccountsUserAllowRule {
     action: ALLOW
 }
 
-rule ChartOfAccountsUserDenyRule {
+rule ChartOfAccountsDenyUserRule {
     description: "User can cannot access chart of accounts only if they are the owner of those accounts."
     participant: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.User"
     operation: ALL
     resource: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.ChartOfAccounts"
     condition: (first.owner.getIdentifier() != second.getIdentifier())
     action: DENY
+}
+
+rule ChartOfAccountsAllowBanksRule {
+    description: "User can access chart of accounts only if they are the owner of those accounts."
+    participant: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.Bank"
+    operation: ALL
+    resource: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.ChartOfAccounts"
+    action: ALLOW
+}
+
+rule ChartOfAccountsAllowAccountantsRule {
+    description: "User can access chart of accounts only if they are the owner of those accounts."
+    participant: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.TaxAccountant"
+    operation: ALL
+    resource: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.ChartOfAccounts"
+    action: ALLOW
 }
