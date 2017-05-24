@@ -25,7 +25,7 @@ const config = require("config");
 const User_1 = require("../models/User");
 const Bank_1 = require("../models/Bank");
 const Accountant_1 = require("../models/Accountant");
-const ChartOfAccounts_1 = require("../models/ChartOfAccounts");
+const ChartOfAccountsResponse_1 = require("../models/ChartOfAccountsResponse");
 let BlockchainService = class BlockchainService {
     constructor() {
         this.logger = new LoggerFactory_1.LoggerFactory().create();
@@ -203,9 +203,9 @@ let BlockchainService = class BlockchainService {
                 chartOfAccounts.equityAccounts = accounts.equityAccounts;
                 chartOfAccounts.revenueAccounts = accounts.revenueAccounts;
                 chartOfAccounts.expenseAccounts = accounts.expenseAccounts;
-                let owner = factory.newResource('net.gunungmerapi.taxTimeQuickBizLoansNetwork', 'User', accounts.owner.emailAddress);
-                owner.firstName = accounts.owner.firstName;
-                owner.lastName = accounts.owner.lastName;
+                chartOfAccounts.offers = [];
+                chartOfAccounts.endorsements = [];
+                let owner = factory.newRelationship('net.gunungmerapi.taxTimeQuickBizLoansNetwork', 'User', accounts.ownerId);
                 chartOfAccounts.owner = owner;
                 registry.add(chartOfAccounts);
                 return accounts;
@@ -224,14 +224,14 @@ let BlockchainService = class BlockchainService {
             }).then((result) => {
                 return this.bizNetworkConnection.getAssetRegistry('net.gunungmerapi.taxTimeQuickBizLoansNetwork.ChartOfAccounts');
             }).then((registry) => {
-                return registry.getAll();
+                return registry.resolveAll();
             }).then((result) => {
                 let accounts = [];
                 let arrayLength = result.length;
                 for (let i = 0; i < arrayLength; i++) {
                     this.logger.debug(result[i].assetAccounts);
                     this.logger.debug(result[i].owner.emailAddress);
-                    accounts.push(new ChartOfAccounts_1.ChartOfAccounts(result[i].chartOfAccountsId, result[i].assetAccounts, result[i].liabilityAccounts, result[i].equityAccounts, result[i].revenueAccounts, result[i].expenseAccounts, new User_1.User(result[i].owner.firstName, result[i].owner.lastName, result[i].owner.emailAddress)));
+                    accounts.push(new ChartOfAccountsResponse_1.ChartOfAccountsResponse(result[i].chartOfAccountsId, result[i].assetAccounts, result[i].liabilityAccounts, result[i].equityAccounts, result[i].revenueAccounts, result[i].expenseAccounts, new User_1.User(result[i].owner.firstName, result[i].owner.lastName, result[i].owner.emailAddress), result[i].offers, result[i].endorsements));
                 }
                 return accounts;
             }).catch((error) => {

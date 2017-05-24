@@ -9,6 +9,7 @@ import { User } from '../models/User';
 import { Bank } from '../models/Bank';
 import { Accountant } from '../models/Accountant';
 import { ChartOfAccounts } from '../models/ChartOfAccounts';
+import { ChartOfAccountsResponse } from '../models/ChartOfAccountsResponse';
 
 @Service()
 export class BlockchainService {
@@ -227,11 +228,10 @@ export class BlockchainService {
                 chartOfAccounts.equityAccounts = accounts.equityAccounts;
                 chartOfAccounts.revenueAccounts = accounts.revenueAccounts;
                 chartOfAccounts.expenseAccounts = accounts.expenseAccounts;
+                chartOfAccounts.offers = [];
+                chartOfAccounts.endorsements = [];
+                let owner = factory.newRelationship('net.gunungmerapi.taxTimeQuickBizLoansNetwork', 'User', accounts.ownerId);
 
-                let owner = factory.newResource('net.gunungmerapi.taxTimeQuickBizLoansNetwork', 'User', accounts.owner.emailAddress);
-
-                owner.firstName = accounts.owner.firstName;
-                owner.lastName = accounts.owner.lastName;
                 chartOfAccounts.owner = owner;
 
                 registry.add(chartOfAccounts);
@@ -251,7 +251,7 @@ export class BlockchainService {
             }).then((result) => {
                 return this.bizNetworkConnection.getAssetRegistry('net.gunungmerapi.taxTimeQuickBizLoansNetwork.ChartOfAccounts');
             }).then((registry) => {
-                return registry.getAll();
+                return registry.resolveAll();
             }).then((result) => {
                 let accounts = [];
                 let arrayLength = result.length;
@@ -259,13 +259,16 @@ export class BlockchainService {
                     this.logger.debug(result[i].assetAccounts);
                     this.logger.debug(result[i].owner.emailAddress);
                     accounts.push(
-                        new ChartOfAccounts(result[i].chartOfAccountsId,
+                        new ChartOfAccountsResponse(result[i].chartOfAccountsId,
                             result[i].assetAccounts,
                             result[i].liabilityAccounts,
                             result[i].equityAccounts,
                             result[i].revenueAccounts,
                             result[i].expenseAccounts,
-                            new User(result[i].owner.firstName, result[i].owner.lastName, result[i].owner.emailAddress)));
+                            new User(result[i].owner.firstName, result[i].owner.lastName, result[i].owner.emailAddress),
+                            result[i].offers,
+                            result[i].endorsements
+                            ))
                 }
                 return accounts;
             }).catch((error) => {

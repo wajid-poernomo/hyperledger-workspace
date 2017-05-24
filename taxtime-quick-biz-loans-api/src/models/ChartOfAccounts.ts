@@ -9,7 +9,7 @@ export class ChartOfAccounts {
     revenueAccounts: string;
     expenseAccounts: string;
 
-    owner : User;
+    ownerId : string;
 
     constructor(chartOfAccountsId: string, 
         assetAccounts: string,  
@@ -17,7 +17,7 @@ export class ChartOfAccounts {
         equityAccounts: string,
         revenueAccounts: string,
         expenseAccounts: string,
-        owner: User) {
+        owner: string) {
         
         this.chartOfAccountsId = chartOfAccountsId, 
         this.assetAccounts = assetAccounts,  
@@ -25,6 +25,6 @@ export class ChartOfAccounts {
         this.equityAccounts = equityAccounts,
         this.revenueAccounts = revenueAccounts,
         this.expenseAccounts = expenseAccounts,
-        this.owner = owner
+        this.ownerId = owner
     }
 }
