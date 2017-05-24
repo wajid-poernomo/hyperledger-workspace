@@ -24,7 +24,7 @@ export class UserController {
 
     @Get('/')
      getAll() : Promise<User> {
-       return this.blockchainService.getAllParticipants();
+       return this.blockchainService.getUsers();
     }
 
 

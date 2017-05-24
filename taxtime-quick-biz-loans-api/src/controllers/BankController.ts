@@ -19,14 +19,12 @@ export class BankController {
 
     constructor(blockchainService: BlockchainService) {
         this.blockchainService = blockchainService;
-
     }
 
     @Get('/')
     getAll() {
        return this.blockchainService.getAllBanks();
     }
-
 
     @Post('/')
     addBank(@Body() bank: Bank) {

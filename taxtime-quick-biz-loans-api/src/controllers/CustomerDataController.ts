@@ -9,8 +9,6 @@ import {JsonController, Param, Body, Get, Post, Put, Delete} from "routing-contr
 import {BusinessNetworkConnection} from 'composer-client';
 import * as config from 'config';
 
-// net.gunungmerapi.taxTimeQuickBizLoansNetwork.ChartOfAccounts
-
 @JsonController('/customerData')
 @Service()
 export class CustomerDataController {

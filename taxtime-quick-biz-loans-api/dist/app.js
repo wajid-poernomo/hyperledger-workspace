@@ -19,9 +19,6 @@ class App {
     }
     run() {
         return __awaiter(this, void 0, void 0, function* () {
-            //const app = express();
-            //app.use(cors());
-            //const LOG = winston.loggers.get('application');
             // Dependency injection
             routing_controllers_1.useContainer(typedi_1.Container);
             typedi_1.Container.set(LoggerFactory_1.LoggerFactory, new LoggerFactory_1.LoggerFactory());

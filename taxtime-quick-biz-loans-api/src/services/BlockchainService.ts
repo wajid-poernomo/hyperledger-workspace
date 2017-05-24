@@ -37,7 +37,7 @@ export class BlockchainService {
 
     }
 
-    public async getAllParticipants(): Promise<any> {
+    public async getUsers(): Promise<any> {
 
         return this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
             .then((result) => {

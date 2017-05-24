@@ -22,5 +22,5 @@ userSecret = DhbruqViTEXs
 userID = gkeilor
 userSecret = tXvjjdTBfyir
 
-composer-rest-server -n basic-sample-network -p defaultProfile -i WebAppAdmin -s DJY27pEnl16d -N never -P 3000
-composer-rest-server -n basic-sample-network -p defaultProfile -i gkeilor -s tXvjjdTBfyir -N never -P 3000
+composer-rest-server -n taxtime-quick-biz-loans -p defaultProfile -i WebAppAdmin -s DJY27pEnl16d -N never -P 3000
+composer-rest-server -n taxtime-quick-biz-loans -p defaultProfile -i gkeilor -s tXvjjdTBfyir -N never -P 3000
