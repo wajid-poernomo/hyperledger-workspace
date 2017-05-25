@@ -56,7 +56,7 @@ function onOffer(makeOffer) {
         		chartOfAccounts.offers = [];
     		}
       
-      		chartOfAccounts.endorsements.push(offer);
+      		chartOfAccounts.offers.push(offer);
       		
       		return chartOfAccountsRegistry.update(chartOfAccounts);      	
     })

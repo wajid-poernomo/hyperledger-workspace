@@ -4,6 +4,8 @@ import {Service} from 'typedi';
 import {LoggerFactory} from '../utils/LoggerFactory';
 import {BlockchainService} from '../services/BlockchainService';
 import {ChartOfAccounts} from '../models/ChartOfAccounts';
+import { MakeOffer } from '../models/MakeOffer';
+
 import {JsonController, Param, Body, Get, Post, Put, Delete} from "routing-controllers";
 
 import {BusinessNetworkConnection} from 'composer-client';
@@ -25,6 +27,13 @@ export class CustomerDataController {
         this.logger.debug("Attempting to Send Chart Of Accounts to Hyperledger fabric.");
 
         return this.blockchainService.SaveChartOfAccounts(chartOfAccounts);
+    }
+
+    @Post('/accounts/offer')
+    postOffer(@Body() makeOffer: MakeOffer) {
+        this.logger.debug("Attempting to offer Hyperledger fabric.");
+
+        return this.blockchainService.MakeOffer(makeOffer);
     }
 
     @Get('/accounts')
