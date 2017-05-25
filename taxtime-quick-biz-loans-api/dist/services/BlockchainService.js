@@ -53,8 +53,8 @@ let BlockchainService = class BlockchainService {
                 let foo = [];
                 let arrayLength = result.length;
                 for (let i = 0; i < arrayLength; i++) {
-                    this.logger.debug(result[i].emailAddress);
-                    foo.push(new User_1.User(result[i].firstName, result[i].lastName, result[i].emailAddress));
+                    this.logger.debug(result[i].userId);
+                    foo.push(new User_1.User(result[i].firstName, result[i].lastName, result[i].userId));
                 }
                 return foo;
             }).catch((error) => {
@@ -74,7 +74,7 @@ let BlockchainService = class BlockchainService {
             }).then((registry) => {
                 this.logger.debug('Retrieved Participant Registry: ' + registry);
                 let factory = this.businessNetworkDefinition.getFactory();
-                let user = factory.newResource('net.gunungmerapi.taxTimeQuickBizLoansNetwork', 'User', newUser.emailAddress);
+                let user = factory.newResource('net.gunungmerapi.taxTimeQuickBizLoansNetwork', 'User', newUser.userId);
                 user.firstName = newUser.firstName;
                 user.lastName = newUser.lastName;
                 registry.add(user);
@@ -82,7 +82,7 @@ let BlockchainService = class BlockchainService {
             }).then((result) => {
                 let arrayLength = result.length;
                 for (let i = 0; i < arrayLength; i++) {
-                    this.logger.debug(result[i].emailAddress);
+                    this.logger.debug(result[i].id);
                 }
                 return newUser;
             }).catch((error) => {
@@ -275,8 +275,8 @@ let BlockchainService = class BlockchainService {
                 let arrayLength = result.length;
                 for (let i = 0; i < arrayLength; i++) {
                     this.logger.debug(result[i].assetAccounts);
-                    this.logger.debug(result[i].owner.emailAddress);
-                    accounts.push(new ChartOfAccountsResponse_1.ChartOfAccountsResponse(result[i].chartOfAccountsId, result[i].assetAccounts, result[i].liabilityAccounts, result[i].equityAccounts, result[i].revenueAccounts, result[i].expenseAccounts, new User_1.User(result[i].owner.firstName, result[i].owner.lastName, result[i].owner.emailAddress), result[i].offers, result[i].endorsements));
+                    this.logger.debug(result[i].owner.userId);
+                    accounts.push(new ChartOfAccountsResponse_1.ChartOfAccountsResponse(result[i].chartOfAccountsId, result[i].assetAccounts, result[i].liabilityAccounts, result[i].equityAccounts, result[i].revenueAccounts, result[i].expenseAccounts, new User_1.User(result[i].owner.firstName, result[i].owner.lastName, result[i].owner.userId), result[i].offers, result[i].endorsements));
                 }
                 return accounts;
             }).catch((error) => {
@@ -296,7 +296,7 @@ let BlockchainService = class BlockchainService {
             }).then((registry) => {
                 return registry.resolve(id);
             }).then((result) => {
-                return new ChartOfAccountsResponse_1.ChartOfAccountsResponse(result.chartOfAccountsId, result.assetAccounts, result.liabilityAccounts, result.equityAccounts, result.revenueAccounts, result.expenseAccounts, new User_1.User(result.owner.firstName, result.owner.lastName, result.owner.emailAddress), result.offers, result.endorsements);
+                return new ChartOfAccountsResponse_1.ChartOfAccountsResponse(result.chartOfAccountsId, result.assetAccounts, result.liabilityAccounts, result.equityAccounts, result.revenueAccounts, result.expenseAccounts, new User_1.User(result.owner.firstName, result.owner.lastName, result.owner.userId), result.offers, result.endorsements);
             }).catch((error) => {
                 this.logger.debug(error);
             });

@@ -55,9 +55,9 @@ export class BlockchainService {
                 let foo = [];
                 let arrayLength = result.length;
                 for (let i = 0; i < arrayLength; i++) {
-                    this.logger.debug(result[i].emailAddress);
+                    this.logger.debug(result[i].userId);
 
-                    foo.push(new User(result[i].firstName, result[i].lastName, result[i].emailAddress));
+                    foo.push(new User(result[i].firstName, result[i].lastName, result[i].userId));
                 }
                 return foo;
 
@@ -81,7 +81,7 @@ export class BlockchainService {
                 this.logger.debug('Retrieved Participant Registry: ' + registry);
 
                 let factory = this.businessNetworkDefinition.getFactory();
-                let user = factory.newResource('net.gunungmerapi.taxTimeQuickBizLoansNetwork', 'User', newUser.emailAddress);
+                let user = factory.newResource('net.gunungmerapi.taxTimeQuickBizLoansNetwork', 'User', newUser.userId);
                 user.firstName = newUser.firstName;
                 user.lastName = newUser.lastName;
 
@@ -92,7 +92,7 @@ export class BlockchainService {
             }).then((result) => {
                 let arrayLength = result.length;
                 for (let i = 0; i < arrayLength; i++) {
-                    this.logger.debug(result[i].emailAddress);
+                    this.logger.debug(result[i].id);
                 }
                 return newUser;
             }).catch((error) => {
@@ -302,7 +302,7 @@ export class BlockchainService {
                 let arrayLength = result.length;
                 for (let i = 0; i < arrayLength; i++) {
                     this.logger.debug(result[i].assetAccounts);
-                    this.logger.debug(result[i].owner.emailAddress);
+                    this.logger.debug(result[i].owner.userId);
                     accounts.push(
                         new ChartOfAccountsResponse(result[i].chartOfAccountsId,
                             result[i].assetAccounts,
@@ -310,7 +310,7 @@ export class BlockchainService {
                             result[i].equityAccounts,
                             result[i].revenueAccounts,
                             result[i].expenseAccounts,
-                            new User(result[i].owner.firstName, result[i].owner.lastName, result[i].owner.emailAddress),
+                            new User(result[i].owner.firstName, result[i].owner.lastName, result[i].owner.userId),
                             result[i].offers,
                             result[i].endorsements
                         ))
@@ -321,7 +321,7 @@ export class BlockchainService {
             });
     }
 
-        public async GetAccountsById(id: string): Promise<ChartOfAccounts> {
+    public async GetAccountsById(id: string): Promise<ChartOfAccounts> {
         return this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
             .then((result) => {
                 this.businessNetworkDefinition = result;
@@ -338,7 +338,7 @@ export class BlockchainService {
                             result.equityAccounts,
                             result.revenueAccounts,
                             result.expenseAccounts,
-                            new User(result.owner.firstName, result.owner.lastName, result.owner.emailAddress),
+                            new User(result.owner.firstName, result.owner.lastName, result.owner.userId),
                             result.offers,
                             result.endorsements
                         );
