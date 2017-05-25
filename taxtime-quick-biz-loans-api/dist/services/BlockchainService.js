@@ -205,6 +205,28 @@ let BlockchainService = class BlockchainService {
             });
         });
     }
+    MakeEndorsement(makeEndorsement) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
+                .then((result) => {
+                this.businessNetworkDefinition = result;
+                this.logger.debug('Connected to: ' + this.businessNetworkIdentifier);
+                return result;
+            }).then((result) => {
+                return this.bizNetworkConnection.getTransactionRegistry();
+            }).then((registry) => {
+                let factory = this.businessNetworkDefinition.getFactory();
+                let transaction = factory.newTransaction("net.gunungmerapi.taxTimeQuickBizLoansNetwork", "Endorse");
+                transaction.taxAccountant = factory.newRelationship("net.gunungmerapi.taxTimeQuickBizLoansNetwork", "TaxAccountant", makeEndorsement.taxAccountantId);
+                transaction.chartOfAccounts = factory.newRelationship("net.gunungmerapi.taxTimeQuickBizLoansNetwork", "ChartOfAccounts", makeEndorsement.chartOfAccountsId);
+                transaction.endorsementId = makeEndorsement.endorsementId;
+                transaction.information = makeEndorsement.information;
+                return this.bizNetworkConnection.submitTransaction(transaction);
+            }).catch((error) => {
+                this.logger.debug(error);
+            });
+        });
+    }
     /**
      * SaveChartOfAccounts
      */
@@ -257,6 +279,24 @@ let BlockchainService = class BlockchainService {
                     accounts.push(new ChartOfAccountsResponse_1.ChartOfAccountsResponse(result[i].chartOfAccountsId, result[i].assetAccounts, result[i].liabilityAccounts, result[i].equityAccounts, result[i].revenueAccounts, result[i].expenseAccounts, new User_1.User(result[i].owner.firstName, result[i].owner.lastName, result[i].owner.emailAddress), result[i].offers, result[i].endorsements));
                 }
                 return accounts;
+            }).catch((error) => {
+                this.logger.debug(error);
+            });
+        });
+    }
+    GetAccountsById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
+                .then((result) => {
+                this.businessNetworkDefinition = result;
+                this.logger.debug('Connected to: ' + this.businessNetworkIdentifier);
+                return result;
+            }).then((result) => {
+                return this.bizNetworkConnection.getAssetRegistry('net.gunungmerapi.taxTimeQuickBizLoansNetwork.ChartOfAccounts');
+            }).then((registry) => {
+                return registry.resolve(id);
+            }).then((result) => {
+                return new ChartOfAccountsResponse_1.ChartOfAccountsResponse(result.chartOfAccountsId, result.assetAccounts, result.liabilityAccounts, result.equityAccounts, result.revenueAccounts, result.expenseAccounts, new User_1.User(result.owner.firstName, result.owner.lastName, result.owner.emailAddress), result.offers, result.endorsements);
             }).catch((error) => {
                 this.logger.debug(error);
             });

@@ -11,6 +11,7 @@ import { Accountant } from '../models/Accountant';
 import { ChartOfAccounts } from '../models/ChartOfAccounts';
 import { ChartOfAccountsResponse } from '../models/ChartOfAccountsResponse';
 import { MakeOffer } from '../models/MakeOffer';
+import { MakeEndorsement } from '../models/MakeEndorsement';
 
 @Service()
 export class BlockchainService {
@@ -226,6 +227,27 @@ export class BlockchainService {
             });
     }
 
+    public async MakeEndorsement(makeEndorsement: MakeEndorsement): Promise<any> {
+        return this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
+            .then((result) => {
+                this.businessNetworkDefinition = result;
+                this.logger.debug('Connected to: ' + this.businessNetworkIdentifier);
+                return result;
+            }).then((result) => {
+                return this.bizNetworkConnection.getTransactionRegistry();
+            }).then((registry) => {
+                let factory = this.businessNetworkDefinition.getFactory();
+                let transaction = factory.newTransaction("net.gunungmerapi.taxTimeQuickBizLoansNetwork", "Endorse");
+                transaction.taxAccountant = factory.newRelationship("net.gunungmerapi.taxTimeQuickBizLoansNetwork","TaxAccountant", makeEndorsement.taxAccountantId);
+                transaction.chartOfAccounts = factory.newRelationship("net.gunungmerapi.taxTimeQuickBizLoansNetwork","ChartOfAccounts", makeEndorsement.chartOfAccountsId); 
+                transaction.endorsementId = makeEndorsement.endorsementId;
+                transaction.information = makeEndorsement.information;
+                return this.bizNetworkConnection.submitTransaction(transaction);
+            }).catch((error) => {
+                this.logger.debug(error);
+            });
+    }
+
     /**
      * SaveChartOfAccounts
      */
@@ -294,6 +316,32 @@ export class BlockchainService {
                         ))
                 }
                 return accounts;
+            }).catch((error) => {
+                this.logger.debug(error);
+            });
+    }
+
+        public async GetAccountsById(id: string): Promise<ChartOfAccounts> {
+        return this.bizNetworkConnection.connect(this.CONNECTION_PROFILE_NAME, this.businessNetworkIdentifier, this.participantId, this.participantPwd)
+            .then((result) => {
+                this.businessNetworkDefinition = result;
+                this.logger.debug('Connected to: ' + this.businessNetworkIdentifier);
+                return result;
+            }).then((result) => {
+                return this.bizNetworkConnection.getAssetRegistry('net.gunungmerapi.taxTimeQuickBizLoansNetwork.ChartOfAccounts');
+            }).then((registry) => {
+                return registry.resolve(id);
+            }).then((result) => {
+                return new ChartOfAccountsResponse(result.chartOfAccountsId,
+                            result.assetAccounts,
+                            result.liabilityAccounts,
+                            result.equityAccounts,
+                            result.revenueAccounts,
+                            result.expenseAccounts,
+                            new User(result.owner.firstName, result.owner.lastName, result.owner.emailAddress),
+                            result.offers,
+                            result.endorsements
+                        );
             }).catch((error) => {
                 this.logger.debug(error);
             });

@@ -1,6 +1,5 @@
   export class MakeOffer {
 
-    transactionId: string;
     offerId: string;
     rate: number;
     contract: string;

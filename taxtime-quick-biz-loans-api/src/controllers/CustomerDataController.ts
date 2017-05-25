@@ -5,11 +5,8 @@ import {LoggerFactory} from '../utils/LoggerFactory';
 import {BlockchainService} from '../services/BlockchainService';
 import {ChartOfAccounts} from '../models/ChartOfAccounts';
 import { MakeOffer } from '../models/MakeOffer';
-
+import { MakeEndorsement } from '../models/MakeEndorsement';
 import {JsonController, Param, Body, Get, Post, Put, Delete} from "routing-controllers";
-
-import {BusinessNetworkConnection} from 'composer-client';
-import * as config from 'config';
 
 @JsonController('/customerData')
 @Service()
@@ -31,15 +28,29 @@ export class CustomerDataController {
 
     @Post('/accounts/offer')
     postOffer(@Body() makeOffer: MakeOffer) {
-        this.logger.debug("Attempting to offer Hyperledger fabric.");
+        this.logger.debug("Attempting make offer Hyperledger fabric.");
 
         return this.blockchainService.MakeOffer(makeOffer);
     }
 
+    @Post('/accounts/endorse')
+    postEndorsement(@Body() makeEndorsement: MakeEndorsement) {
+        this.logger.debug("Attempting make endorsement Hyperledger fabric.");
+
+        return this.blockchainService.MakeEndorsement(makeEndorsement);
+    }
+
     @Get('/accounts')
     getChartOfAccounts() {
-       this.logger.debug("Attempting to get Accounts Hyperledger fabric.");
+       this.logger.debug("Attempting to get accounts Hyperledger fabric.");
 
        return this.blockchainService.GetAccounts();
+    }
+
+    @Get('/accounts/:id')
+    getChartOfAccountsById(@Param("id") id: string) {
+       this.logger.debug("Attempting to get accounts Hyperledger fabric.");
+
+       return this.blockchainService.GetAccountsById(id);
     }
 }
