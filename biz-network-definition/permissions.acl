@@ -7,7 +7,7 @@ rule ChartOfAccountsDenyUserRule {
     action: ALLOW
 }
 
-rule R5 {
+rule UserCanSeeThemselvesRule {
     description: "Users can see themselves"
     participant(m): "net.gunungmerapi.taxTimeQuickBizLoansNetwork.User"
     operation: READ
@@ -16,7 +16,7 @@ rule R5 {
     action: ALLOW
 }
 
-rule R6 {
+rule BanksCanReadAllChartOfAccountsRule {
     description: "Banks can see ChartOfAccounts"
     participant: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.Bank"
     operation: READ
@@ -24,7 +24,7 @@ rule R6 {
     action: ALLOW
 }
 
-rule R7 {
+rule BanksCanReadUsersRule {
     description: "Banks can see Users"
     participant: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.Bank"
     operation: READ
@@ -32,7 +32,7 @@ rule R7 {
     action: ALLOW
 }
 
-rule R8 {
+rule AccountantsCanSeeAllChartOfAccountsRule {
     description: "TaxAccountants can see ChartOfAccounts"
     participant: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.TaxAccountant"
     operation: READ
@@ -40,39 +40,39 @@ rule R8 {
     action: ALLOW
 }
 
-rule R9 {
-    description: "TaxAccountants can see ChartOfAccounts"
+rule AccountantsCanReadUsersRule {
+    description: "TaxAccountants can see Users"
     participant: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.TaxAccountant"
     operation: READ
     resource: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.User"
     action: ALLOW
 }
 
-rule R10 {
-    description: "TaxAccountants can see ChartOfAccounts"
+rule AccountantsCanAccessEndorsementsRule {
+    description: "TaxAccountants have access to Endorsements"
     participant: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.TaxAccountant"
     operation: ALL
     resource: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.Endorsement"
     action: ALLOW
 }
 
-rule R11 {
-    description: "TaxAccountants can see ChartOfAccounts"
+rule BanksCanAccessEndorsementsRule {
+    description: "Banks can access Endorsements"
     participant: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.Bank"
     operation: ALL
     resource: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.Endorsement"
     action: ALLOW
 }
 
-rule R12 {
-    description: "TaxAccountants can see ChartOfAccounts"
+rule BanksCanAccessOffersRule {
+    description: "Banks can access Offers"
     participant: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.Bank"
     operation: ALL
     resource: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.Offer"
     action: ALLOW
 }
 
-rule R13 {
+rule BanksCanReadAccountantsRule {
     description: "Banks can see TaxAccountants"
     participant: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.Bank"
     operation: READ
@@ -80,15 +80,15 @@ rule R13 {
     action: ALLOW
 }
 
-rule R12 {
-    description: "Banks can be seen by TaxAccountants"
+rule AccountantsCanReadBanksRule {
+    description: "TaxAccountants can see Banks"
     participant: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.TaxAccountant"
     operation: READ
     resource: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.Bank"
     action: ALLOW
 }
 
-rule R13 {
+rule BanksCanReadBanksRule {
     description: "Banks can see Banks"
     participant: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.Bank"
     operation: READ
@@ -96,7 +96,7 @@ rule R13 {
     action: ALLOW
 }
 
-rule R14 {
+rule AccountantsCanReadAccountantsRule {
     description: "TaxAccountants can see TaxAccountants"
     participant: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.TaxAccountant"
     operation: READ
@@ -104,7 +104,7 @@ rule R14 {
     action: ALLOW
 }
 
-rule R15 {
+rule AccountantsCanReadOffersRule {
     description: "TaxAccountants can see Offers"
     participant: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.TaxAccountant"
     operation: READ
@@ -112,39 +112,39 @@ rule R15 {
     action: ALLOW
 }
 
-rule R19 {
-    description: "TaxAccountants can see MakeOffer"
+rule AccountantsCanEndorseRule {
+    description: "TaxAccountants can Endorse"
     participant: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.TaxAccountant"
     operation: ALL
     resource: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.Endorse"
     action: ALLOW
 }
 
-rule R18 {
-    description: "TaxAccountants can see MakeOffer"
+rule AccountantsCanSeeEndorsementsRule {
+    description: "TaxAccountants can see Endorsments"
     participant: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.TaxAccountant"
     operation: ALL
     resource: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.Endorsement"
     action: ALLOW
 }
 
-rule R15 {
-    description: "TaxAccountants can see MakeOffer"
+rule AccountantsCanEndorseAChartOfAccountsRule {
+    description: "TaxAccountants can endorse ChartOfAccounts"
     participant: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.TaxAccountant"
     operation: UPDATE
     resource: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.ChartOfAccounts"
     action: ALLOW
 }
 
-rule R16 {
-    description: "TaxAccountants can see MakeOffer"
+rule BanksCanMakeOffersRule {
+    description: "Banks can MakeOffer"
     participant: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.Bank"
     operation: ALL
     resource: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.MakeOffer"
     action: ALLOW
 }
 
-rule R17 {
+rule BanksCanUpdateAndReadOffersRule {
     description: "TaxAccountants can see MakeOffer"
     participant: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.Bank"
     operation: ALL
@@ -152,7 +152,7 @@ rule R17 {
     action: ALLOW
 }
 
-rule R15 {
+rule BanksCanMakeOfferOnChartOfAccountsRule {
     description: "TaxAccountants can see MakeOffer"
     participant: "net.gunungmerapi.taxTimeQuickBizLoansNetwork.Bank"
     operation: UPDATE
