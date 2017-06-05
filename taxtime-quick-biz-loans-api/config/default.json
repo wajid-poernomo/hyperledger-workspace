@@ -1,8 +1,7 @@
 {
-
   "taxtime-quick-biz-loans" : {
-     "participantId" : "nab123",
-     "participantPwd" :"iyYQHkKZqYcD",
+     "participantId" : "WebAppAdmin",
+     "participantPwd" :"DJY27pEnl16d",
      "businessNetworkIdentifier" : "taxtime-quick-biz-loans",
      "connectionProfile" : "defaultProfile"
   }
